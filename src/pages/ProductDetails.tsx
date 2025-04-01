@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { products, categories } from '@/data/mockData';
 import { 
   ChevronRight, 
   Check, 
@@ -20,7 +19,8 @@ import {
   Package, 
   ListChecks,
   CreditCard,
-  FileCheck
+  FileCheck,
+  Calendar
 } from 'lucide-react';
 
 const ProductDetails = () => {
