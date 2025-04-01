@@ -20,7 +20,8 @@ import {
   FileCheck,
   CheckCircle,
   User,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from 'lucide-react';
 
 const SupplierDetails = () => {

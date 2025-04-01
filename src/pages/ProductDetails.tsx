@@ -22,6 +22,7 @@ import {
   FileCheck,
   Calendar
 } from 'lucide-react';
+import { products, categories } from '@/data/mockData';
 
 const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -194,7 +195,7 @@ const ProductDetails = () => {
                   <h4 className="font-medium mb-2">Key Features</h4>
                   <ul className="list-disc list-inside mb-4 space-y-1 text-muted-foreground">
                     {Object.entries(product.specifications).slice(0, 4).map(([key, value]) => (
-                      <li key={key}>{key}: {value}</li>
+                      <li key={key}>{key}: {String(value)}</li>
                     ))}
                   </ul>
                   
@@ -241,7 +242,7 @@ const ProductDetails = () => {
                     {Object.entries(product.specifications).map(([key, value], idx) => (
                       <tr key={key} className={idx % 2 === 0 ? 'bg-transparent' : 'bg-muted/30'}>
                         <td className="py-3 px-4 font-medium border-b border-border">{key}</td>
-                        <td className="py-3 px-4 text-muted-foreground border-b border-border">{value}</td>
+                        <td className="py-3 px-4 text-muted-foreground border-b border-border">{String(value)}</td>
                       </tr>
                     ))}
                   </tbody>
