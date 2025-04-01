@@ -20,7 +20,7 @@ import { Search, Calendar, Filter, ArrowDown, ArrowUp } from 'lucide-react';
 
 const Tenders = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('deadline');
   const [sortOrder, setSortOrder] = useState('asc');
   const [filters, setFilters] = useState({
@@ -37,7 +37,7 @@ const Tenders = () => {
     }
     
     // Category filter
-    if (selectedCategory && tender.categoryId !== selectedCategory) {
+    if (selectedCategory !== 'all' && tender.categoryId !== selectedCategory) {
       return false;
     }
     
@@ -108,7 +108,7 @@ const Tenders = () => {
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
+                    <SelectItem value="all">All Categories</SelectItem>
                     {categories.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
@@ -245,7 +245,7 @@ const Tenders = () => {
               </p>
               <Button onClick={() => {
                 setSearchTerm('');
-                setSelectedCategory('');
+                setSelectedCategory('all');
                 setFilters({ auditRequired: false, activeOnly: true });
               }}>
                 Reset Filters
