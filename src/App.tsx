@@ -18,6 +18,7 @@ import BuyerPortal from "./pages/BuyerPortal";
 import SellerPortal from "./pages/SellerPortal";
 import ProductDetails from "./pages/ProductDetails";
 import About from "./pages/About";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/buyer" element={<BuyerPortal />} />
           <Route path="/seller" element={<SellerPortal />} />
           <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

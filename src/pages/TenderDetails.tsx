@@ -1,297 +1,361 @@
 
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
+import { tenders, categories } from '@/data/mockData';
 import { 
-  FileText, 
   Calendar, 
-  User, 
+  MapPin, 
   Clock, 
-  DollarSign, 
-  Briefcase, 
-  CheckCircle,
+  Tag, 
+  FileText, 
+  Users, 
+  CheckCircle, 
   AlertCircle,
-  MapPin
+  BarChart,
+  Download
 } from 'lucide-react';
 
 const TenderDetails = () => {
   const { tenderId } = useParams<{ tenderId: string }>();
   
-  // This would normally fetch tender data from an API
-  const tender = {
-    id: tenderId,
-    title: "Supply of High-Grade Industrial Steel",
-    description: "Looking for suppliers of industrial-grade steel for construction projects. Must meet ISO 9001 standards and be available for long-term contracts.",
-    buyerId: "buyer123",
-    buyerName: "Construction Enterprises Ltd",
-    buyerLocation: "Berlin, Germany",
-    categoryId: "cat003",
-    subcategoryId: "subcat009",
-    quantity: "500",
-    unit: "tons",
-    budget: "250000",
-    currency: "EUR",
-    deadline: "2023-12-15",
-    createdAt: "2023-09-20",
-    status: "active",
-    attachments: ["/docs/requirements.pdf", "/docs/specs.pdf"],
-    specifications: {
-      "Grade": "A36",
-      "Thickness": "10-50mm",
-      "Width": "1500mm min",
-      "Length": "6000mm standard",
-      "Surface": "Hot-rolled",
-      "Standard": "ASTM, ISO",
-      "Certification": "ISO 9001, EN 10204"
-    },
-    hasQualityRequirements: true,
-    requiresAudit: true,
-    bidsCount: 7
-  };
+  // Find the tender from mock data
+  const tender = tenders.find(t => t.id === tenderId) || tenders[0]; // Fallback to first tender if not found
+  const category = categories.find(c => c.id === tender.categoryId);
   
-  // This would normally fetch category data from an API
-  const category = {
-    name: "Metals & Alloys",
-    slug: "metals-alloys"
-  };
-  
-  // This would normally fetch subcategory data from an API
-  const subcategory = {
-    name: "Structural Steel"
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       
       <main className="flex-grow bg-background">
         <div className="container mx-auto px-4 py-8">
-          {/* Breadcrumbs */}
-          <div className="text-sm mb-6">
-            <Link to="/" className="text-muted-foreground hover:text-foreground">Home</Link>
-            <span className="mx-2">/</span>
-            <Link to="/tenders" className="text-muted-foreground hover:text-foreground">Tenders</Link>
-            <span className="mx-2">/</span>
-            <span className="text-foreground">{tender.title}</span>
-          </div>
-          
-          {/* Tender Header */}
-          <div className="bg-card rounded-lg shadow-sm p-6 mb-8">
-            <div className="flex flex-col md:flex-row justify-between">
-              <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-                <div className="flex items-center mb-4">
+          <div className="mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">{tender.title}</h1>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
+                    {category?.name}
+                  </Badge>
+                  {tender.requiresAudit && (
+                    <Badge variant="outline" className="bg-business-100 text-business-700 border-business-200">
+                      Audit Required
+                    </Badge>
+                  )}
                   <Badge 
-                    className={`mr-2 ${
-                      tender.status === 'active' 
-                        ? 'bg-green-100 text-green-800' 
-                        : tender.status === 'closed'
-                          ? 'bg-gray-100 text-gray-800'
-                          : tender.status === 'awarded'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-red-100 text-red-800'
-                    }`}
+                    variant="outline" 
+                    className={
+                      tender.status === 'active' ? "bg-green-50 text-green-700 border-green-200" :
+                      tender.status === 'closed' ? "bg-red-50 text-red-700 border-red-200" :
+                      "bg-amber-50 text-amber-700 border-amber-200"
+                    }
                   >
                     {tender.status.charAt(0).toUpperCase() + tender.status.slice(1)}
                   </Badge>
-                  {category && (
-                    <Badge variant="outline" className="mr-2">
-                      {category.name}
-                    </Badge>
-                  )}
-                  {subcategory && (
-                    <Badge variant="outline">
-                      {subcategory.name}
-                    </Badge>
-                  )}
                 </div>
-                
-                <h1 className="text-2xl font-bold mb-3">{tender.title}</h1>
-                <p className="text-muted-foreground mb-4">{tender.description}</p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center text-sm">
-                    <User className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span className="text-muted-foreground mr-1">Buyer:</span>
-                    <Link to={`/buyers/${tender.buyerId}`} className="text-primary hover:underline">
-                      {tender.buyerName}
-                    </Link>
+                <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    <span>Posted on {new Date(tender.createdAt).toLocaleDateString()}</span>
                   </div>
-                  
-                  <div className="flex items-center text-sm">
-                    <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span className="text-muted-foreground mr-1">Location:</span>
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 mr-2" />
+                    <span>Deadline: {new Date(tender.deadline).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <MapPin className="h-4 w-4 mr-2" />
                     <span>{tender.buyerLocation}</span>
                   </div>
-                  
-                  <div className="flex items-center text-sm">
-                    <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span className="text-muted-foreground mr-1">Deadline:</span>
-                    <span>{new Date(tender.deadline).toLocaleDateString()}</span>
-                  </div>
-                  
-                  <div className="flex items-center text-sm">
-                    <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <span className="text-muted-foreground mr-1">Posted on:</span>
-                    <span>{new Date(tender.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                
-                <div className="flex flex-wrap gap-3">
-                  <Button>Submit Bid</Button>
-                  <Button variant="outline">Contact Buyer</Button>
-                  <Button variant="ghost">Save Tender</Button>
                 </div>
               </div>
               
-              <div className="md:w-1/3">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle>Tender Overview</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Quantity:</span>
-                      <span className="font-medium">{tender.quantity} {tender.unit}</span>
-                    </div>
-                    
-                    {tender.budget && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Budget:</span>
-                        <span className="font-medium">{tender.currency} {Number(tender.budget).toLocaleString()}</span>
-                      </div>
-                    )}
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Bids received:</span>
-                      <span className="font-medium">{tender.bidsCount}</span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Quality Requirements:</span>
-                      <span className="font-medium flex items-center">
-                        {tender.hasQualityRequirements ? (
-                          <><CheckCircle className="h-4 w-4 mr-1 text-green-600" /> Yes</>
-                        ) : (
-                          <><AlertCircle className="h-4 w-4 mr-1 text-amber-600" /> No</>
-                        )}
-                      </span>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Audit Required:</span>
-                      <span className="font-medium flex items-center">
-                        {tender.requiresAudit ? (
-                          <><CheckCircle className="h-4 w-4 mr-1 text-green-600" /> Yes</>
-                        ) : (
-                          <><AlertCircle className="h-4 w-4 mr-1 text-amber-600" /> No</>
-                        )}
-                      </span>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Time remaining:</span>
-                      <span className="font-semibold text-orange-600">12 days, 8 hours</span>
-                    </div>
-                  </CardContent>
-                </Card>
+              <div className="flex gap-3">
+                <Button variant="outline" className="gap-2">
+                  <Download className="h-4 w-4" />
+                  <span>Download PDF</span>
+                </Button>
+                <Button className="gap-2 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
+                  Submit Bid
+                </Button>
               </div>
             </div>
-          </div>
-          
-          {/* Tender Details Tabs */}
-          <Tabs defaultValue="specifications">
-            <TabsList className="mb-6">
-              <TabsTrigger value="specifications">Specifications</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="requirements">Requirements</TabsTrigger>
-            </TabsList>
             
-            <TabsContent value="specifications" className="bg-card rounded-lg shadow-sm p-6">
-              <h3 className="text-xl font-semibold mb-4">Technical Specifications</h3>
-              
-              <div className="bg-muted/20 rounded-lg overflow-hidden">
-                <table className="w-full">
-                  <tbody>
-                    {Object.entries(tender.specifications).map(([key, value], idx) => (
-                      <tr key={key} className={idx % 2 === 0 ? 'bg-transparent' : 'bg-muted/30'}>
-                        <td className="py-3 px-4 font-medium border-b border-border">{key}</td>
-                        <td className="py-3 px-4 text-muted-foreground border-b border-border">{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="documents" className="bg-card rounded-lg shadow-sm p-6">
-              <h3 className="text-xl font-semibold mb-4">Tender Documents</h3>
-              
-              <div className="space-y-4">
-                {tender.attachments.map((doc, idx) => (
-                  <Card key={idx}>
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div className="flex items-center">
-                        <FileText className="h-5 w-5 mr-3 text-muted-foreground" />
-                        <div>
-                          <h4 className="font-medium">
-                            {doc.split('/').pop()}
+            <Card className="overflow-hidden bg-gradient-to-br from-card to-background/95 shadow-md">
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="w-full justify-start px-6 pt-4 bg-transparent">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="specifications">Specifications</TabsTrigger>
+                  <TabsTrigger value="documents">Documents</TabsTrigger>
+                  <TabsTrigger value="bids">Bids & Inquiries</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="overview" className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                    <div className="md:col-span-2">
+                      <h3 className="text-xl font-semibold mb-4">Tender Description</h3>
+                      <p className="mb-6 text-muted-foreground">
+                        {tender.description}
+                      </p>
+                      
+                      <h3 className="text-xl font-semibold mb-4">Requirements</h3>
+                      <ul className="list-disc list-inside space-y-2 mb-6 text-muted-foreground">
+                        <li>Quantity: {tender.quantity} {tender.unit}</li>
+                        <li>Quality: Industrial grade, conforming to ISO standards</li>
+                        <li>Delivery: Expected within 30 days after bid acceptance</li>
+                        <li>Payment Terms: Net 60 after delivery and inspection</li>
+                        {tender.requiresAudit && (
+                          <li>Quality Audit: Required pre-shipment inspection by third party</li>
+                        )}
+                      </ul>
+                      
+                      <h3 className="text-xl font-semibold mb-4">Bid Evaluation Criteria</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-2 flex items-center">
+                            <Tag className="h-4 w-4 mr-2" />
+                            Price (40%)
                           </h4>
+                          <p className="text-sm text-muted-foreground">
+                            Competitive pricing including all costs, taxes, and delivery
+                          </p>
+                        </div>
+                        
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-2 flex items-center">
+                            <Clock className="h-4 w-4 mr-2" />
+                            Delivery Time (25%)
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            Ability to meet or exceed delivery timeline requirements
+                          </p>
+                        </div>
+                        
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-2 flex items-center">
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Quality (25%)
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            Material quality, certifications, and compliance documentation
+                          </p>
+                        </div>
+                        
+                        <div className="bg-muted/30 p-4 rounded-lg">
+                          <h4 className="font-medium mb-2 flex items-center">
+                            <Users className="h-4 w-4 mr-2" />
+                            Vendor Profile (10%)
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            Previous experience, reliability, and customer feedback
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Card className="bg-card shadow-sm mb-6">
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold mb-4">Buyer Information</h3>
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-sm font-medium">Company</p>
+                              <p className="text-muted-foreground">{tender.buyerName}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Location</p>
+                              <p className="text-muted-foreground">{tender.buyerLocation}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Member since</p>
+                              <p className="text-muted-foreground">January 2020</p>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 pt-4 border-t">
+                            <Button variant="outline" className="w-full">
+                              View Buyer Profile
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="bg-card shadow-sm">
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold mb-4">Tender Statistics</h3>
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <p className="text-sm font-medium">Views</p>
+                              <p className="text-muted-foreground">342</p>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <p className="text-sm font-medium">Bids received</p>
+                              <p className="text-muted-foreground">{tender.bidsCount}</p>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <p className="text-sm font-medium">Days remaining</p>
+                              <p className="text-muted-foreground">
+                                {Math.max(0, Math.ceil((new Date(tender.deadline).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 pt-4 border-t">
+                            <div className="flex items-center mb-2">
+                              <AlertCircle className="h-4 w-4 mr-2 text-amber-500" />
+                              <p className="text-sm">Bid activity: Medium</p>
+                            </div>
+                            <div className="w-full bg-muted/50 h-2 rounded-full overflow-hidden">
+                              <div className="bg-amber-500 h-full rounded-full" style={{ width: '60%' }}></div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="specifications" className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Technical Specifications</h3>
+                  <p className="mb-6 text-muted-foreground">
+                    This tender requires materials that meet the following technical specifications.
+                    All suppliers must ensure their bids meet these minimum requirements.
+                  </p>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="bg-muted/70">
+                          <th className="py-3 px-4 text-left font-semibold border-b border-border">Specification</th>
+                          <th className="py-3 px-4 text-left font-semibold border-b border-border">Requirement</th>
+                          <th className="py-3 px-4 text-left font-semibold border-b border-border">Standards</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-border">
+                          <td className="py-3 px-4 font-medium">Material</td>
+                          <td className="py-3 px-4 text-muted-foreground">Carbon Steel</td>
+                          <td className="py-3 px-4 text-muted-foreground">ASTM A36</td>
+                        </tr>
+                        <tr className="border-b border-border bg-muted/30">
+                          <td className="py-3 px-4 font-medium">Dimensions</td>
+                          <td className="py-3 px-4 text-muted-foreground">1200mm x 2400mm</td>
+                          <td className="py-3 px-4 text-muted-foreground">Tolerance: ±2mm</td>
+                        </tr>
+                        <tr className="border-b border-border">
+                          <td className="py-3 px-4 font-medium">Thickness</td>
+                          <td className="py-3 px-4 text-muted-foreground">3mm</td>
+                          <td className="py-3 px-4 text-muted-foreground">Tolerance: ±0.2mm</td>
+                        </tr>
+                        <tr className="border-b border-border bg-muted/30">
+                          <td className="py-3 px-4 font-medium">Surface Treatment</td>
+                          <td className="py-3 px-4 text-muted-foreground">Hot-dip galvanized</td>
+                          <td className="py-3 px-4 text-muted-foreground">ISO 1461</td>
+                        </tr>
+                        <tr className="border-b border-border">
+                          <td className="py-3 px-4 font-medium">Minimum Yield Strength</td>
+                          <td className="py-3 px-4 text-muted-foreground">250 MPa</td>
+                          <td className="py-3 px-4 text-muted-foreground">ASTM E8</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="documents" className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Tender Documents</h3>
+                  <p className="mb-6 text-muted-foreground">
+                    The following documents are available for download. These contain detailed information about the tender requirements, 
+                    specifications, and submission guidelines.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center">
+                        <div className="mr-4 p-2 bg-primary/10 rounded">
+                          <FileText className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Tender Specification Document</h4>
                           <p className="text-sm text-muted-foreground">PDF, 2.4 MB</p>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">Download</Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="requirements" className="bg-card rounded-lg shadow-sm p-6">
-              <h3 className="text-xl font-semibold mb-4">Quality Requirements</h3>
-              
-              <div className="space-y-6">
-                <div className="bg-muted/30 p-4 rounded-md">
-                  <h4 className="font-medium mb-2">Material Certification</h4>
-                  <p className="text-muted-foreground">
-                    All materials must be certified according to ISO 9001 standards. Material test certificates (MTC) 
-                    according to EN 10204 type 3.1 will be required for each batch delivered.
-                  </p>
-                </div>
+                      <Button variant="outline" size="sm">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center">
+                        <div className="mr-4 p-2 bg-primary/10 rounded">
+                          <FileText className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Technical Requirements</h4>
+                          <p className="text-sm text-muted-foreground">PDF, 1.8 MB</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center">
+                        <div className="mr-4 p-2 bg-primary/10 rounded">
+                          <FileText className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Bid Submission Template</h4>
+                          <p className="text-sm text-muted-foreground">XLSX, 520 KB</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center">
+                        <div className="mr-4 p-2 bg-primary/10 rounded">
+                          <FileText className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium">Terms and Conditions</h4>
+                          <p className="text-sm text-muted-foreground">PDF, 890 KB</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
                 
-                <div className="bg-muted/30 p-4 rounded-md">
-                  <h4 className="font-medium mb-2">Packaging & Delivery</h4>
-                  <p className="text-muted-foreground">
-                    Steel must be packaged to withstand maritime transport. Each package should not exceed 3 tons. 
-                    Delivery terms are CIF to Hamburg port.
-                  </p>
-                </div>
-                
-                <div className="bg-muted/30 p-4 rounded-md">
-                  <h4 className="font-medium mb-2">Quality Inspection</h4>
-                  <p className="text-muted-foreground">
-                    The buyer reserves the right to conduct a pre-shipment inspection. Any non-conformities 
-                    identified during inspection must be rectified before shipment.
-                  </p>
-                </div>
-                
-                <div className="bg-muted/30 p-4 rounded-md">
-                  <h4 className="font-medium mb-2">Acceptance Criteria</h4>
-                  <p className="text-muted-foreground">
-                    Chemical composition and mechanical properties must comply with ASTM A36 specification. 
-                    Dimensional tolerances must be within ±2mm for width and ±5mm for length.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+                <TabsContent value="bids" className="p-6">
+                  <div className="text-center py-16">
+                    <BarChart className="h-16 w-16 mx-auto mb-4 text-muted-foreground/60" />
+                    <h3 className="text-xl font-semibold mb-2">Bid Information</h3>
+                    <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                      You need to be logged in and a verified supplier to view bid information for this tender.
+                    </p>
+                    <div className="flex justify-center gap-3">
+                      <Button variant="outline">Log In</Button>
+                      <Button>Register as Supplier</Button>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </Card>
+          </div>
         </div>
       </main>
       

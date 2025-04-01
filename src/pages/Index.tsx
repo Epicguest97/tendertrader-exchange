@@ -5,212 +5,268 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { categories, tenders } from '@/data/mockData';
-import { ArrowRight, Search, Shield, BarChart3, CheckCircle2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  TrendingUp, 
+  Shield, 
+  Search, 
+  BarChart4, 
+  Users, 
+  CheckCircle, 
+  ArrowRight
+} from 'lucide-react';
 
 const Index = () => {
-  const featuredTenders = tenders.slice(0, 3);
-  const featuredCategories = categories.slice(0, 4);
-
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="bg-business-800 text-white py-20">
+        <section className="bg-gradient-to-b from-background to-muted/30 py-16 sm:py-24">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Streamline Your Raw Materials Procurement
+            <div className="max-w-4xl mx-auto text-center animate-fade-in">
+              <Badge variant="outline" className="mb-6 px-3 py-1 bg-primary/10 text-primary border-primary/20">
+                B2B Raw Materials Marketplace
+              </Badge>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+                Streamlined Procurement for Your Business
               </h1>
-              <p className="text-xl mb-8 text-business-100">
-                Connect with verified suppliers, post tenders, and access quality audited materials all in one platform.
+              <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+                Connect with verified suppliers, manage tenders, and streamline your raw materials procurement process all in one platform.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <Link to="/buyer">
-                  <Button size="lg" className="bg-accent hover:bg-accent-600 text-white w-full sm:w-auto">
+                  <Button size="xl" variant="gradient" className="w-full sm:w-auto shadow-lg hover:shadow-xl animate-pulse">
                     I'm a Buyer
+                    <ArrowRight className="ml-1 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link to="/seller">
-                  <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-business-700 w-full sm:w-auto">
+                  <Button size="xl" variant="accent" className="w-full sm:w-auto shadow-lg hover:shadow-xl">
                     I'm a Supplier
+                    <ArrowRight className="ml-1 h-5 w-5" />
                   </Button>
                 </Link>
               </div>
               
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-business-700 p-6 rounded-lg text-center">
-                  <Shield className="h-10 w-10 mx-auto mb-3 text-accent" />
-                  <h3 className="text-lg font-semibold mb-2">Verified Suppliers</h3>
-                  <p className="text-business-200 text-sm">Work only with thoroughly vetted, reliable suppliers with proven track records.</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div>
+                  <p className="text-3xl font-bold text-primary">2,500+</p>
+                  <p className="text-muted-foreground">Active Tenders</p>
                 </div>
-                <div className="bg-business-700 p-6 rounded-lg text-center">
-                  <BarChart3 className="h-10 w-10 mx-auto mb-3 text-accent" />
-                  <h3 className="text-lg font-semibold mb-2">Transparent Bidding</h3>
-                  <p className="text-business-200 text-sm">Competitive bidding process with clear specifications and requirements.</p>
+                <div>
+                  <p className="text-3xl font-bold text-primary">850+</p>
+                  <p className="text-muted-foreground">Verified Suppliers</p>
                 </div>
-                <div className="bg-business-700 p-6 rounded-lg text-center">
-                  <CheckCircle2 className="h-10 w-10 mx-auto mb-3 text-accent" />
-                  <h3 className="text-lg font-semibold mb-2">Quality Assurance</h3>
-                  <p className="text-business-200 text-sm">All materials undergo rigorous quality checks with detailed audit reports.</p>
+                <div>
+                  <p className="text-3xl font-bold text-primary">$120M+</p>
+                  <p className="text-muted-foreground">Monthly Trading Volume</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-primary">35+</p>
+                  <p className="text-muted-foreground">Countries</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
         
-        {/* Active Tenders Section */}
+        {/* Features Section */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center mb-10">
-              <h2 className="text-2xl font-bold">Active Tenders</h2>
-              <Link to="/tenders" className="text-primary flex items-center">
-                View all tenders <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {featuredTenders.map((tender) => (
-                <Card key={tender.id} className="card-hover">
-                  <CardContent className="p-6">
-                    <div className="mb-3">
-                      <span className="inline-block bg-accent-100 text-accent-600 px-2 py-1 text-xs font-medium rounded">
-                        {categories.find(c => c.id === tender.categoryId)?.name}
-                      </span>
-                      <span className="inline-block bg-muted ml-2 px-2 py-1 text-xs font-medium rounded">
-                        Bids: {tender.bidsCount}
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-lg font-semibold mb-2">{tender.title}</h3>
-                    <p className="text-muted-foreground mb-4 text-sm line-clamp-2">{tender.description}</p>
-                    
-                    <div className="flex justify-between text-sm mb-4">
-                      <div>
-                        <p className="font-medium">Quantity</p>
-                        <p>{tender.quantity} {tender.unit}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium">Deadline</p>
-                        <p>{new Date(tender.deadline).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm">
-                        <p className="font-medium">Buyer</p>
-                        <p>{tender.buyerName}</p>
-                      </div>
-                      <Link to={`/tenders/${tender.id}`}>
-                        <Button variant="outline" size="sm">View Details</Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-        
-        {/* Categories Section */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center mb-10">
-              <h2 className="text-2xl font-bold">Browse Categories</h2>
-              <Link to="/categories" className="text-primary flex items-center">
-                All categories <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredCategories.map((category) => (
-                <Link key={category.id} to={`/categories/${category.slug}`}>
-                  <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow card-hover h-full">
-                    <div className="bg-muted/50 rounded-lg p-4 mb-4 w-16 h-16 flex items-center justify-center">
-                      <img 
-                        src={category.image} 
-                        alt={category.name} 
-                        className="w-10 h-10 object-contain"
-                      />
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2">{category.name}</h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{category.description}</p>
-                    <p className="text-sm text-primary-foreground/70">
-                      {category.subcategories.length} subcategories
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-        
-        {/* How It Works Section */}
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-2xl font-bold mb-4">How TenderTrader Works</h2>
+            <div className="text-center mb-16">
+              <Badge variant="outline" className="mb-4 px-3 py-1 bg-accent/10 text-accent border-accent/20">
+                Platform Benefits
+              </Badge>
+              <h2 className="text-3xl font-bold mb-4">Why Choose TenderTrader?</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our streamlined process makes procurement and selling of raw materials efficient and transparent.
+                Our platform streamlines the procurement process for raw materials,
+                connecting buyers with verified suppliers in a transparent marketplace.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-business-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-business-800 text-xl font-bold">1</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Register & Verify</h3>
-                <p className="text-muted-foreground text-sm">
-                  Create an account as a buyer or seller and complete the verification process.
-                </p>
-              </div>
+              <Card className="bg-card/50 backdrop-blur-sm hover-scale shadow-md hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Shield className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Verified Suppliers</h3>
+                  <p className="text-muted-foreground">
+                    All suppliers undergo thorough verification to ensure reliability and quality standards.
+                  </p>
+                </CardContent>
+              </Card>
               
-              <div className="text-center">
-                <div className="w-16 h-16 bg-business-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-business-800 text-xl font-bold">2</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Post or Bid on Tenders</h3>
-                <p className="text-muted-foreground text-sm">
-                  Buyers create detailed tenders, while suppliers submit competitive bids.
-                </p>
-              </div>
+              <Card className="bg-card/50 backdrop-blur-sm hover-scale shadow-md hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <TrendingUp className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Transparent Bidding</h3>
+                  <p className="text-muted-foreground">
+                    Clear bidding processes with fair competition and comparable offers in one place.
+                  </p>
+                </CardContent>
+              </Card>
               
-              <div className="text-center">
-                <div className="w-16 h-16 bg-business-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-business-800 text-xl font-bold">3</span>
-                </div>
-                <h3 className="text-lg font-semibold mb-2">Quality Assurance & Delivery</h3>
-                <p className="text-muted-foreground text-sm">
-                  Products undergo quality audits before final approval and delivery.
-                </p>
-              </div>
+              <Card className="bg-card/50 backdrop-blur-sm hover-scale shadow-md hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Search className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Quality Audits</h3>
+                  <p className="text-muted-foreground">
+                    Optional third-party quality inspection services to ensure materials meet specifications.
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm hover-scale shadow-md hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <BarChart4 className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Market Analytics</h3>
+                  <p className="text-muted-foreground">
+                    Access market trends, price indices, and procurement analytics to make informed decisions.
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm hover-scale shadow-md hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Global Network</h3>
+                  <p className="text-muted-foreground">
+                    Connect with suppliers and buyers from around the world, expanding your business reach.
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-card/50 backdrop-blur-sm hover-scale shadow-md hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <CheckCircle className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Streamlined Process</h3>
+                  <p className="text-muted-foreground">
+                    From tender creation to bid acceptance, our platform simplifies the entire procurement process.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
         
         {/* CTA Section */}
-        <section className="py-16 bg-business-800 text-white">
+        <section className="py-16 bg-gradient-to-r from-business-800 to-business-900 text-white">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Procurement Process?</h2>
-              <p className="text-business-100 mb-8">
-                Join thousands of businesses that trust TenderTrader for their raw material needs.
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Procurement?</h2>
+              <p className="text-business-100 mb-8 max-w-2xl mx-auto">
+                Join thousands of businesses already streamlining their raw materials procurement on our platform.
               </p>
+              
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/buyer">
-                  <Button size="lg" className="bg-accent hover:bg-accent-600 text-white w-full sm:w-auto">
-                    Start as Buyer
+                  <Button size="lg" variant="accent" className="w-full sm:w-auto">
+                    Get Started as Buyer
                   </Button>
                 </Link>
                 <Link to="/seller">
-                  <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-business-700 w-full sm:w-auto">
-                    Start as Supplier
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-white text-white hover:bg-white/10">
+                    Register as Supplier
                   </Button>
                 </Link>
               </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Categories Preview */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Badge variant="outline" className="mb-4 px-3 py-1 bg-accent/10 text-accent border-accent/20">
+                Material Categories
+              </Badge>
+              <h2 className="text-3xl font-bold mb-4">Browse by Category</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Explore raw materials across various industry categories
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              <Link to="/categories/metals" className="hover-scale">
+                <Card className="bg-muted/30 hover:bg-accent/10 transition-colors shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <span className="text-xl font-bold text-primary">M</span>
+                    </div>
+                    <h3 className="font-medium">Metals & Mining</h3>
+                  </CardContent>
+                </Card>
+              </Link>
+              
+              <Link to="/categories/chemicals" className="hover-scale">
+                <Card className="bg-muted/30 hover:bg-accent/10 transition-colors shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <span className="text-xl font-bold text-primary">C</span>
+                    </div>
+                    <h3 className="font-medium">Chemicals</h3>
+                  </CardContent>
+                </Card>
+              </Link>
+              
+              <Link to="/categories/agriculture" className="hover-scale">
+                <Card className="bg-muted/30 hover:bg-accent/10 transition-colors shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <span className="text-xl font-bold text-primary">A</span>
+                    </div>
+                    <h3 className="font-medium">Agricultural</h3>
+                  </CardContent>
+                </Card>
+              </Link>
+              
+              <Link to="/categories/energy" className="hover-scale">
+                <Card className="bg-muted/30 hover:bg-accent/10 transition-colors shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <span className="text-xl font-bold text-primary">E</span>
+                    </div>
+                    <h3 className="font-medium">Energy</h3>
+                  </CardContent>
+                </Card>
+              </Link>
+              
+              <Link to="/categories/textiles" className="hover-scale">
+                <Card className="bg-muted/30 hover:bg-accent/10 transition-colors shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <span className="text-xl font-bold text-primary">T</span>
+                    </div>
+                    <h3 className="font-medium">Textiles</h3>
+                  </CardContent>
+                </Card>
+              </Link>
+              
+              <Link to="/categories" className="hover-scale">
+                <Card className="bg-muted/30 hover:bg-accent/10 transition-colors shadow-sm">
+                  <CardContent className="p-6 text-center">
+                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <ArrowRight className="h-5 w-5 text-primary" />
+                    </div>
+                    <h3 className="font-medium">View All</h3>
+                  </CardContent>
+                </Card>
+              </Link>
             </div>
           </div>
         </section>
