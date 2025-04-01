@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,32 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom B2B colors
+				business: {
+					'50': '#f0f4f8',
+					'100': '#d9e2ec',
+					'200': '#bcccdc',
+					'300': '#9fb3c8',
+					'400': '#829ab1',
+					'500': '#627d98',
+					'600': '#486581',
+					'700': '#334e68',
+					'800': '#243b53',
+					'900': '#102a43',
+				},
+				accent: {
+					'50': '#edfafa',
+					'100': '#d5f6f6',
+					'200': '#afecef',
+					'300': '#7edce2',
+					'400': '#16bdca',
+					'500': '#0694a2',
+					'600': '#057481',
+					'700': '#046170',
+					'800': '#05505c',
+					'900': '#014451',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
