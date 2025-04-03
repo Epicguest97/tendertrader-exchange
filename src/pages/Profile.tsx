@@ -11,10 +11,20 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
+// Define profile type based on our Supabase schema
+interface ProfileData {
+  id: string;
+  name: string;
+  location: string | null;
+  email: string;
+  role: string;
+  updated_at?: string;
+}
+
 const Profile = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<ProfileData | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -38,7 +48,7 @@ const Profile = () => {
       if (error) throw error;
 
       if (data) {
-        setProfile(data);
+        setProfile(data as ProfileData);
         setFormData({
           name: data.name || '',
           location: data.location || '',
@@ -72,7 +82,7 @@ const Profile = () => {
           name: formData.name,
           location: formData.location,
           updated_at: new Date().toISOString(),
-        })
+        } as any)
         .eq('id', user?.id);
 
       if (error) throw error;
