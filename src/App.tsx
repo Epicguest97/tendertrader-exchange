@@ -1,51 +1,67 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Index from '@/pages/Index';
+import Categories from '@/pages/Categories';
+import CategoryPage from '@/pages/CategoryPage';
+import Tenders from '@/pages/Tenders';
+import TenderDetails from '@/pages/TenderDetails';
+import Suppliers from '@/pages/Suppliers';
+import SupplierDetails from '@/pages/SupplierDetails';
+import ProductDetails from '@/pages/ProductDetails';
+import BuyerPortal from '@/pages/BuyerPortal';
+import SellerPortal from '@/pages/SellerPortal';
+import About from '@/pages/About';
+import NotFound from '@/pages/NotFound';
+import Login from '@/pages/Login';
+import Auth from '@/pages/Auth';
+import Profile from '@/pages/Profile';
+import { AuthProvider } from '@/contexts/AuthContext';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+function App() {
+  return (
+    <Router>
+      <TooltipProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/categories/:slug" element={<CategoryPage />} />
+            <Route path="/tenders" element={<Tenders />} />
+            <Route path="/tenders/:id" element={<TenderDetails />} />
+            <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/suppliers/:id" element={<SupplierDetails />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/login" element={<Login />} />
 
-// Pages
-import Categories from "./pages/Categories";
-import CategoryPage from "./pages/CategoryPage";
-import Tenders from "./pages/Tenders";
-import TenderDetails from "./pages/TenderDetails";
-import Suppliers from "./pages/Suppliers";
-import SupplierDetails from "./pages/SupplierDetails";
-import BuyerPortal from "./pages/BuyerPortal";
-import SellerPortal from "./pages/SellerPortal";
-import ProductDetails from "./pages/ProductDetails";
-import About from "./pages/About";
-import Login from "./pages/Login";
+            {/* Protected general routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/profile" element={<Profile />} />
+            </Route>
 
-const queryClient = new QueryClient();
+            {/* Protected routes for buyers */}
+            <Route element={<ProtectedRoute requiredRole="buyer" />}>
+              <Route path="/buyer-portal" element={<BuyerPortal />} />
+              <Route path="/buyer-portal/*" element={<BuyerPortal />} />
+            </Route>
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/categories/:categorySlug" element={<CategoryPage />} />
-          <Route path="/tenders" element={<Tenders />} />
-          <Route path="/tenders/:tenderId" element={<TenderDetails />} />
-          <Route path="/suppliers" element={<Suppliers />} />
-          <Route path="/suppliers/:supplierId" element={<SupplierDetails />} />
-          <Route path="/products/:productId" element={<ProductDetails />} />
-          <Route path="/buyer" element={<BuyerPortal />} />
-          <Route path="/seller" element={<SellerPortal />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+            {/* Protected routes for sellers */}
+            <Route element={<ProtectedRoute requiredRole="seller" />}>
+              <Route path="/seller-portal" element={<SellerPortal />} />
+              <Route path="/seller-portal/*" element={<SellerPortal />} />
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+        </AuthProvider>
+      </TooltipProvider>
+    </Router>
+  );
+}
 
 export default App;

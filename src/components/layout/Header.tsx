@@ -1,7 +1,8 @@
-
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import UserAvatar from '@/components/auth/UserAvatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +21,11 @@ import {
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <header className="w-full border-b border-border bg-card shadow-sm sticky top-0 z-50">
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
@@ -95,12 +98,20 @@ const Header = () => {
               </button>
             )}
             
-            <Link to="/login" className="hidden md:flex">
-              <Button variant="outline" className="gap-2">
-                <LogIn className="h-4 w-4" />
-                Log In
-              </Button>
-            </Link>
+            <div className="ml-auto flex items-center gap-2">
+              {user ? (
+                <UserAvatar />
+              ) : (
+                <>
+                  <Button variant="ghost" onClick={() => navigate('/auth')}>
+                    Log In
+                  </Button>
+                  <Button onClick={() => navigate('/auth?signup')}>
+                    Sign Up
+                  </Button>
+                </>
+              )}
+            </div>
             
             <Link to="/buyer" className="hidden md:flex">
               <Button variant="outline" className="hover:bg-primary/10 transition-colors shadow-sm">Buyer Portal</Button>
@@ -121,7 +132,6 @@ const Header = () => {
           </div>
         </div>
         
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-3 py-3 border-t animate-in slide-in-from-top">
             <nav className="flex flex-col space-y-3">
