@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -113,11 +114,11 @@ const Header = () => {
               )}
             </div>
             
-            <Link to="/buyer" className="hidden md:flex">
+            <Link to="/buyer-portal" className="hidden md:flex">
               <Button variant="outline" className="hover:bg-primary/10 transition-colors shadow-sm">Buyer Portal</Button>
             </Link>
             
-            <Link to="/seller" className="hidden md:flex">
+            <Link to="/seller-portal" className="hidden md:flex">
               <Button className="shadow-md hover:shadow-lg transition-all hover:translate-y-[-1px]">Seller Portal</Button>
             </Link>
             
@@ -176,14 +177,14 @@ const Header = () => {
                 </Link>
                 <div className="grid grid-cols-2 gap-2">
                   <Link 
-                    to="/buyer" 
+                    to="/buyer-portal" 
                     className="block"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <Button variant="outline" className="w-full">Buyer Portal</Button>
                   </Link>
                   <Link 
-                    to="/seller" 
+                    to="/seller-portal" 
                     className="block"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
