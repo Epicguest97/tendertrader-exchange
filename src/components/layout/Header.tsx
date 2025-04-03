@@ -57,6 +57,9 @@ const Header = () => {
                   <DropdownMenuItem className="hover:bg-accent/20 transition-colors cursor-pointer">
                     <Link to="/categories/textiles" className="w-full">Textiles & Fibers</Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem className="hover:bg-accent/20 transition-colors cursor-pointer">
+                    <Link to="/categories" className="w-full">All Categories</Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               
@@ -166,7 +169,7 @@ const Header = () => {
               </Link>
               <div className="pt-2 space-y-2">
                 <Link 
-                  to="/login" 
+                  to="/auth" 
                   className="block"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

@@ -29,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up the auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log('Auth state changed:', event);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         
@@ -48,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      console.log('Retrieved session:', currentSession ? 'exists' : 'none');
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       setLoading(false);
@@ -65,7 +67,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({
+      console.log('Signing up with:', { email, userData });
+      
+      const { error, data } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -78,6 +82,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) throw error;
       
+      console.log('Sign up response:', data);
+      
       toast({
         title: 'Account created!',
         description: 'Please check your email to confirm your account.',
@@ -87,12 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // since email confirmation may be disabled in Supabase
       navigate('/');
     } catch (error: any) {
-      toast({
-        title: 'Error signing up',
-        description: error.message,
-        variant: 'destructive',
-      });
-      console.error('Error signing up:', error);
+      console.error('Error signing up:', error.message);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -101,21 +103,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Signing in with:', email);
+      
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
       
+      console.log('Sign in response:', data);
       navigate('/');
     } catch (error: any) {
-      toast({
-        title: 'Error signing in',
-        description: error.message,
-        variant: 'destructive',
-      });
-      console.error('Error signing in:', error);
+      console.error('Error signing in:', error.message);
+      throw error;
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,10 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 const AuthForm: React.FC = () => {
   const { signIn, signUp, loading } = useAuth();
-  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const [searchParams] = useSearchParams();
+  const initialTab = searchParams.get('signup') ? 'signup' : 'login';
+  const [activeTab, setActiveTab] = useState<'login' | 'signup'>(initialTab as 'login' | 'signup');
   
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -22,19 +26,64 @@ const AuthForm: React.FC = () => {
   const [signupPassword, setSignupPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState<'buyer' | 'seller'>('buyer');
+  const [formError, setFormError] = useState('');
+
+  // Update active tab when URL parameters change
+  useEffect(() => {
+    if (searchParams.get('signup')) {
+      setActiveTab('signup');
+    }
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn(loginEmail, loginPassword);
+    setFormError('');
+    try {
+      await signIn(loginEmail, loginPassword);
+    } catch (error: any) {
+      setFormError(error.message || 'Failed to sign in');
+      toast({
+        title: "Error signing in",
+        description: error.message || "Failed to sign in",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signUp(signupEmail, signupPassword, { name, role });
+    setFormError('');
+    
+    if (signupPassword.length < 6) {
+      setFormError('Password must be at least 6 characters');
+      toast({
+        title: "Error creating account",
+        description: "Password must be at least 6 characters",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      await signUp(signupEmail, signupPassword, { name, role });
+    } catch (error: any) {
+      setFormError(error.message || 'Failed to create account');
+      toast({
+        title: "Error creating account",
+        description: error.message || "Failed to create account",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     <div className="w-full max-w-md mx-auto">
+      {formError && (
+        <div className="mb-4 p-3 bg-destructive/15 border border-destructive/30 text-destructive rounded-md text-sm">
+          {formError}
+        </div>
+      )}
+      
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'login' | 'signup')}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>
@@ -129,6 +178,7 @@ const AuthForm: React.FC = () => {
                     required
                     minLength={6}
                   />
+                  <p className="text-xs text-muted-foreground">Password must be at least 6 characters</p>
                 </div>
                 <div className="space-y-2">
                   <Label>I am a:</Label>
